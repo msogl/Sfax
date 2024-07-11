@@ -83,7 +83,7 @@ class SfaxApi
             'Content-Type: multipart/form-data',
         ];
 
-        echo $url."\n";
+        //echo $url."\n";
 
         $resp = $this->callApi($url, $params, $headers);
         if (is_object($resp) && $resp->isSuccess) {
