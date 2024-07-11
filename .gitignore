@@ -1,0 +1,11 @@
+# Editors
+.vscode/
+
+# Windows
+Thumbs.db
+
+
+.env
+config/
+dist/
+*.log

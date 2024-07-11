@@ -1,0 +1,16 @@
+{
+    "name": "msogl/sfax",
+    "description": "Api for Sfax",
+    "autoload": {
+        "psr-4": {
+            "Msogl\\Sfax\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Joe Clark",
+            "email": "jclark@msogl.com"
+        }
+    ],
+    "require": {}
+}
