@@ -54,6 +54,21 @@ if ($resp === false) {
 }
 ```
 
+## Test mode
+You can put the API in test mode. Doing so will allow you to call our API code without actually calling Sfax's API. Instead, it will return the composed URL for the API in the $lastError field and return false before Sfax's API is called.
+
+```
+$sfax = new SfaxApi($config);
+$sfax->testMode();
+$resp = $sfax->sendFax($fromFaxNumber, $recipientFaxNumber, $recipientFaxName, $faxFilePath);
+
+if ($resp === false) {
+    echo $sfax->lastError . "\n";
+} else {
+    var_dump($resp);
+}
+```
+
 ## Using a named cover page
 Sfax supports including a cover page via their templated cover pages, as defined in their system.
 

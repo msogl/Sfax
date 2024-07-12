@@ -1,3 +1,6 @@
+# Version 1.0.2
+Add test mode
+
 # Version 1.0.1
 Add support for Sfax templated cover pages.
 

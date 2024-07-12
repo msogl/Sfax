@@ -6,6 +6,7 @@ class SfaxApi
 {
     public $lastError = null;
 
+    private $mode = 'PROD';
     private $serviceEndpointUrl = 'https://api.sfaxme.com/api/';
     private $securityToken = null;
     private $config = null;
@@ -37,6 +38,16 @@ class SfaxApi
             'fromphone' => '',
             'timezone' => '',
         ];
+    }
+
+    public function testMode()
+    {
+        $this->mode = 'TEST';
+    }
+
+    public function prodMode()
+    {
+        $this->mode = 'PROD';
     }
 
     public function setCoverPage($params)
@@ -113,7 +124,10 @@ class SfaxApi
             'Content-Type: multipart/form-data',
         ];
 
-        //echo $url."\n";die;
+        if ($this->mode == 'TEST') {
+            $this->lastError = $url;
+            return false;
+        }
 
         $resp = $this->callApi($url, $params, $headers);
         if (is_object($resp) && $resp->isSuccess) {
