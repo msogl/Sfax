@@ -54,6 +54,29 @@ if ($resp === false) {
 }
 ```
 
+## Using a named cover page
+Sfax supports including a cover page via their templated cover pages, as defined in their system.
+
+Unfortunately, it does not support sending their templated cover page alone. A PDF file must still be sent along.
+
+The name of the coverpage defaults to "None". If the name is different than "None" (case-insensitive) then a cover page will be sent. Only parameters that are populated will be used. There isn't much logic around this, so be careful about array parameter names.
+
+```
+$sfax = new \Msogl\Sfax\SfaxApi($config);
+
+$sfax->setCoverPage([
+    'name' => 'Sfax traditional cover page',
+    'subject' => 'Testing only',
+    'reference' => 'Ref # here',
+    'remarks' => 'This is just a test. Please ignore.',
+    'fromname' => 'Your name nere',
+    'fromphone' => 'Your phone nere',
+    'timezone' => 'see the API specifications',
+]);
+
+$resp = $sfax->sendFax($fromFaxNumber, $recipientFaxNumber, $recipientFaxName, $pdfFile);
+```
+
 ## Getting a usage report
 
 $startDate can be null or a specific date. If null, it will automatically be 30 days prior to the current date.

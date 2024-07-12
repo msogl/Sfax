@@ -14,17 +14,50 @@ class SfaxApi
         '0001' => 'Fax file not found',
         '0002' => 'From fax number is not a real fax number',
         '0003' => 'Recipient fax number is not a real fax number',
+        '0004' => 'Must have a fax file if no cover page is specified',
     ];
+
+    private $coverPage = null;
 
     public function __construct($config)
     {
         $this->config = &$config;
         $this->apiKey = &$config['SFAX_APIKEY'];
+        $this->init();
+    }
+
+    public function init()
+    {
+        $this->coverPage = [
+            'name' => 'None',
+            'subject' => '',
+            'reference' => '',
+            'remarks' => '',
+            'fromname' => '',
+            'fromphone' => '',
+            'timezone' => '',
+        ];
+    }
+
+    public function setCoverPage($params)
+    {
+        $this->coverPage['name'] = $params['name'];
+        $this->coverPage['subject'] = $params['subject'] ?? '';
+        $this->coverPage['reference'] = $params['reference'] ?? '';
+        $this->coverPage['remarks'] = $params['remarks'] ?? '';
+        $this->coverPage['fromname'] = $params['fromname'] ?? '';
+        $this->coverPage['fromphone'] = $params['fromphone'] ?? '';
+        $this->coverPage['timezone'] = $params['timezone'] ?? '';
     }
 
     public function sendFax(string $fromFaxNumber, string $recipientFaxNumber, string $recipientName, string $faxFilePath)
     {
-        if (!file_exists($faxFilePath)) {
+        if ($faxFilePath == null && $this->coverPage['name'] == 'None') {
+            $this->lastError = $this->errorCode['0004'];
+            return false;
+        }
+
+        if ($faxFilePath != null && !file_exists($faxFilePath)) {
             $this->lastError = $this->errorCode['0001'];
             return false;
         }
@@ -47,17 +80,14 @@ class SfaxApi
         } catch (\Exception $e) {
             $this->lastError = $this->errorCode['0003'];
             return false;
-        }            
+        }
 
         // RecipientName cannot be blank
         if ($recipientName == '') {
             $recipientName = $recipientFaxNumber;
         }
 
-        $optionalParams = "CoverPageName=None";
-
-        // Use the following if a cover page is desired (modify as necessary)
-        //$optionalParams .= ";CoverPageSubject=Test;CoverPageReference=Test1;TrackingCode=Test1"; //Parameters to pass for CoverPages
+        $optionalParams = $this->buildCoverPageParams();
 
         if (!$useDefaultFromFax) {
             $optionalParams .= ";SenderFaxNumber=" . $fromFaxNumber;
@@ -83,7 +113,7 @@ class SfaxApi
             'Content-Type: multipart/form-data',
         ];
 
-        //echo $url."\n";
+        //echo $url."\n";die;
 
         $resp = $this->callApi($url, $params, $headers);
         if (is_object($resp) && $resp->isSuccess) {
@@ -163,5 +193,42 @@ class SfaxApi
         // Do something header
         $this->lastError = 'HTTP Error: ' . $responseInfo['http_code'];
         return false;
+    }
+
+    private function buildCoverPageParams()
+    {
+        $params = 'CoverPageName=None';
+
+        if (strcasecmp($this->coverPage['name'], 'none') == 0) {
+            return $params;
+        }
+
+        $params = 'CoverPageName=' . $this->coverPage['name'];
+
+        if ($this->coverPage['subject']) {
+            $params .= ';CoverPageSubject=' . $this->coverPage['subject'];
+        }
+
+        if ($this->coverPage['reference']) {
+            $params .= ';CoverPageReference=' . $this->coverPage['reference'];
+        }
+
+        if ($this->coverPage['remarks']) {
+            $params .= ';CoverPageRemarks=' . $this->coverPage['remarks'];
+        }
+
+        if ($this->coverPage['fromname']) {
+            $params .= ';CoverPageFromName=' . $this->coverPage['fromname'];
+        }
+
+        if ($this->coverPage['fromphone']) {
+            $params .= ';CoverPageFromPhone=' . $this->coverPage['fromphone'];
+        }
+
+        if ($this->coverPage['timezone']) {
+            $params .= ';CoverPageTimeZone=' . $this->coverPage['timezone'];
+        }
+
+        return $params;
     }
 }
