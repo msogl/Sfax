@@ -57,7 +57,7 @@ class SfaxApi
         $optionalParams = "CoverPageName=None";
 
         // Use the following if a cover page is desired (modify as necessary)
-        //$optionalParams .= ";CoverPageSubject=JoeTest;CoverPageReference=JoeTest1;TrackingCode=JoeTest1"; //Parameters to pass for CoverPages
+        //$optionalParams .= ";CoverPageSubject=Test;CoverPageReference=Test1;TrackingCode=Test1"; //Parameters to pass for CoverPages
 
         if (!$useDefaultFromFax) {
             $optionalParams .= ";SenderFaxNumber=" . $fromFaxNumber;
