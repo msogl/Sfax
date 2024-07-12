@@ -1,6 +1,7 @@
 {
     "name": "msogl/sfax",
     "description": "PHP Api for Sfax",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Msogl\\Sfax\\": "src/"
