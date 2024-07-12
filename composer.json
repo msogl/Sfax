@@ -1,6 +1,6 @@
 {
     "name": "msogl/sfax",
-    "description": "Api for Sfax",
+    "description": "PHP Api for Sfax",
     "autoload": {
         "psr-4": {
             "Msogl\\Sfax\\": "src/"
@@ -13,6 +13,6 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0"
+        "php": ">=7.3"
     }
 }
