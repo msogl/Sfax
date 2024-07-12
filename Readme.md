@@ -8,7 +8,7 @@ The PHP code sample there is outdated and uses the old mcrypt libraries in PHP. 
 
 ## Install
 ```
-composer require msogl\sfax
+composer require msogl/sfax
 ```
 
 ## Configuration
